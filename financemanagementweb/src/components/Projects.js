@@ -10,28 +10,16 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Pagination from '@mui/material/Pagination';
+
 
 const Projects = () => {
     const[project, setProject] = useState([])
-    // const columns = [
-    //     { field: 'id', headerName: 'ID', width: 70 },
-    //     { field: 'name_project', headerName: 'Project name', width: 400 },
-    //     { field: 'target', headerName: 'Target', type: 'number', width: 100 },
-    //     { field: 'income_amount', headerName: 'Income', type: 'number', width: 100 },
-    //     { field: 'spending_amount', headerName: 'Spending', type: 'number', width: 100 },
-    //     { headerName: 'Action', width: 100, 
-    //       renderCell: (params) => (
-    //         <Link to="/">Chi tiết</Link>
-    //       ), }
-        //   valueGetter: (params) =>
-        //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-        // },
-    // ];
 
     useEffect(() => {
         const loadProjects = async () => {
             let res = await API.get(endpoints['projects'])
-            console.log(res.data.results)
             setProject(res.data.results)
         }
 
@@ -40,37 +28,46 @@ const Projects = () => {
 
     return (
         <>
+        <div>
+          <h1 style={{ textAlign: 'center', color: '#F1C338' }}>PROJECT LIST</h1>
+        </div>
+        <hr />
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell component="th" scope="row">ID</TableCell>
-                  <TableCell component="th" scope="row">Project&nbsp;name</TableCell>
-                  <TableCell align="right">Target</TableCell>
-                  <TableCell align="right">Income</TableCell>
-                  <TableCell align="right">Spending</TableCell>
-                  <TableCell align="right">Action</TableCell>
+                  <TableCell component="th" scope="row"><strong>ID</strong></TableCell>
+                  <TableCell component="th" scope="row"><strong>Project&nbsp;name</strong></TableCell>
+                  <TableCell align="right"><strong>Target</strong></TableCell>
+                  <TableCell align="right"><strong>Income</strong></TableCell>
+                  <TableCell align="right"><strong>Spending</strong></TableCell>
+                  <TableCell component="th" scope="row"><strong>Action</strong></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {project.map(p => (
+                {project.map(p => {
+                  let url = `/projects/${p.id}/`
+                  return (
                   <TableRow key={p.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
                     <TableCell component="th" scope="row">{p.id}</TableCell>
                     <TableCell component="th" scope="row">{p.name_project}</TableCell>
-                    <TableCell align="right">{p.target}</TableCell>
+                    <TableCell align="right" typeof="number">{p.target}</TableCell>
                     <TableCell align="right">{p.income_amount}</TableCell>
                     <TableCell align="right">{p.spending_amount}</TableCell>
-                    <TableCell align="right"><Link>Chi tiết</Link></TableCell>
-                  </TableRow>
-                ))}
+                    <TableCell component="th" scope="row"><Link style={{ textDecoration: 'none' }} to={url}><Button style={{ color: '#F46841' }}><strong>Detail</strong></Button></Link></TableCell>
+                  </TableRow>)
+                })}
               </TableBody>
             </Table>
           </TableContainer>
-
-          {/* <hr/>
-          <div style={{ height: 500, width: '100%' }}>
-            <DataGrid rows={project} columns={columns} checkboxSelection />
-          </div> */}
+          <hr/>
+          <div align="right">
+            <Link style={{ textDecoration: 'none' }}><Button style={{ color: '#F1C338' }}><strong>Sort</strong></Button></Link>
+            <Link style={{ textDecoration: 'none' }}><Button style={{ color: '#F1C338' }}><strong>New</strong></Button></Link>
+          </div>
+          <div>
+            <Pagination count={10} />
+          </div>
         </>
     )
 }
